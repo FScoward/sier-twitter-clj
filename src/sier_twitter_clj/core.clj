@@ -1,8 +1,7 @@
 (ns sier-twitter-clj.core
   (:import [org.apache.poi.xssf.usermodel XSSFWorkbook]
            [java.io FileOutputStream]
-
-           [twitter4j TwitterFactory Query TwitterException])
+           [twitter4j TwitterFactory Query TwitterException Paging])
   (:require [clojure.java.io :as io]))
 
 (def wb (XSSFWorkbook.))
@@ -15,7 +14,7 @@
 ;; get twitter time line
 ;; return map
 (defn get-timeline []
-  (def x (.getHomeTimeline twitter))
+  (def x (.getHomeTimeline twitter (Paging. (int 1) (int 200))))
   (map #(zipmap [:screenName :name :text] [(.. % getUser getScreenName)
                                            (.. % getUser getName)
                                            (.getText %)
