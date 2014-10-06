@@ -1,8 +1,9 @@
 (ns sier-twitter-clj.core
-  (:import [org.apache.poi.xssf.usermodel XSSFWorkbook]
+  (:import [org.apache.poi.xssf.usermodel XSSFWorkbook XSSFColor]
            [org.apache.poi.ss.usermodel IndexedColors CellStyle]
            [java.io FileOutputStream]
-           [twitter4j TwitterFactory Query TwitterException Paging])
+           [twitter4j TwitterFactory Query TwitterException Paging]
+           [java.awt Color])
   (:require [clojure.java.io :as io]))
 
 (def wb (XSSFWorkbook.))
@@ -20,7 +21,6 @@
                                            (.. % getUser getName)
                                            (.getText %)
                                            ]) x))
-
 (defn -main []
   (def timeline (get-timeline))
   (def tweets-size (count timeline))
@@ -29,7 +29,7 @@
     (def tweet (first (drop (- tweets-size (inc i)) timeline)))
     (def row (.createRow sheet i))
     (def style (.createCellStyle wb))
-    (.setFillForegroundColor style (.. IndexedColors AQUA getIndex))
+    (.setFillForegroundColor style (XSSFColor. (Color. 203 249 192)))
     (.setFillPattern style (CellStyle/SOLID_FOREGROUND))
     (let [cell (. row createCell 0)]
       (.setCellValue cell (str (:name tweet) "@" (:screenName tweet)))
